@@ -1,14 +1,14 @@
 import logging
 
 import aiosqlite
+from db.base import engine
 from db.init_db import DB_PATH
+from sqlalchemy import text
 
 
 async def execute_query(query, params):
-    async with aiosqlite.connect(DB_PATH) as db:
-        cursor = await db.execute(query, params)
-        rows = await cursor.fetchall()
-        return rows
+    async with engine.begin() as conn:
+        return await conn.execute(text(query), params)
 
 
 async def stream_query(query, *params):
