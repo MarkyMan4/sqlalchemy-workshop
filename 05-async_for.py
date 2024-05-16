@@ -13,9 +13,9 @@ async def dispatch_orders(delay):
 
 
 # TODO: uncomment this
-# async def deliver_order(order):
-#     await asyncio.sleep(1)
-#     print(f"order {order} delivered {time.strftime('%X')}")
+async def deliver_order(order):
+    await asyncio.sleep(1)
+    print(f"order {order} delivered {time.strftime('%X')}")
 
 
 async def main():
@@ -24,7 +24,7 @@ async def main():
             print(f"order {order} dispatched.")
 
             # TODO: uncomment this 
-            # tg.create_task(deliver_order(order))
+            tg.create_task(deliver_order(order))
 
 
 asyncio.run(main())
