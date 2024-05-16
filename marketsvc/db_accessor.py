@@ -14,16 +14,14 @@ def execute_query(query, params):
 def execute_insert_query(query, params):
     with engine.connect() as conn:
         cursor = conn.execute(text(query), params)
-        result = cursor.fetchon()
+        result = cursor.fetchone()
         conn.commit()
         return result
 
 def execute_insert_queries(query, params_tuple):
-    with sqlite3.connect(DB_PATH) as conn:
-        cur = conn.cursor()
-        cur.executemany(query, params_tuple)
+    with engine.connect() as conn:
+        conn.execute(text(query), params_tuple)
         conn.commit()
-
 
 def get_customers():
     rows = execute_query("SELECT * FROM customer", {})
@@ -113,7 +111,7 @@ def add_new_order_for_customer(customer_id, items):
             RETURNING id
             """,
             {"customer_id": customer_id},
-        )[0]
+        ).id
 
         execute_insert_queries(
             """
