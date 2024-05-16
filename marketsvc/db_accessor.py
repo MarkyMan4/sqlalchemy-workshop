@@ -1,7 +1,9 @@
 import logging
 
 from db.base import engine
-from sqlalchemy import text
+from db.customer import Customer
+from sqlalchemy import select, text
+from sqlalchemy.orm import Session
 
 
 def execute_query(query, params=None):
@@ -24,8 +26,12 @@ def execute_insert_queries(query, params_tuple):
 
 
 def get_customers():
-    rows = execute_query("SELECT * FROM customer")
-    return rows
+    with Session(engine) as session:
+        stmt = select(Customer)
+        result = session.execute(stmt)
+        customers = result.scalars().all()
+
+        return customers
 
 
 def get_orders_of_customer(customer_id):

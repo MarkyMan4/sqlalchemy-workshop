@@ -1,12 +1,8 @@
 import uvicorn
 from db.init_db import init_db
-from db_accessor import (
-    add_new_order_for_customer,
-    get_customers,
-    get_orders_between_dates,
-    get_orders_of_customer,
-    get_total_cost_of_an_order,
-)
+from db_accessor import (add_new_order_for_customer, get_customers,
+                         get_orders_between_dates, get_orders_of_customer,
+                         get_total_cost_of_an_order)
 from fastapi import Body, FastAPI, HTTPException, status
 
 app = FastAPI(debug=True)
@@ -20,7 +16,7 @@ def hello():
 @app.get("/api/customers")
 def customers():
     customers = get_customers()
-    return (customer._asdict() for customer in customers)
+    return (customer.as_dict() for customer in customers)
 
 
 @app.get("/api/orders/{cust_id}")
