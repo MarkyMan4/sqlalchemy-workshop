@@ -1,16 +1,11 @@
 import uvicorn
 from db.init_db import init_db
-from db_accessor import (
-    add_new_order_for_customer,
-    get_customers,
-    get_orders_between_dates,
-    get_orders_of_customer,
-    get_total_cost_of_an_order,
-)
+from db_accessor import (add_new_order_for_customer, get_customers,
+                         get_orders_between_dates, get_orders_of_customer,
+                         get_total_cost_of_an_order)
 from fastapi import Body, FastAPI, HTTPException, status
 
 app = FastAPI(debug=True)
-
 
 @app.get("/")
 def hello():
@@ -19,12 +14,14 @@ def hello():
 
 @app.get("/api/customers")
 def customers():
-    return get_customers()
+    customers = get_customers()
+    return [cust._asdict() for cust in customers]
 
 
 @app.get("/api/orders/{cust_id}")
 def orders(cust_id: int):
-    return get_orders_of_customer(cust_id)
+    custorders = get_orders_of_customer(cust_id)
+    return [co._asdict() for co in custorders]
 
 
 @app.get("/api/order_total/{order_id}")
@@ -35,7 +32,8 @@ def order_total(order_id: int):
 
 @app.get("/api/orders_between_dates/{before}/{after}")
 def orders_between_dates(before: str, after: str):
-    return get_orders_between_dates(after, before)
+    ordersbet = get_orders_between_dates(after, before)
+    return [ord._asdict() for ord in ordersbet]
 
 
 @app.post("/api/add_new_order", status_code=status.HTTP_201_CREATED)
